@@ -1,7 +1,3 @@
-/*
-This is empty on purpose! Your code to build the resume will go here.
- */
-
 var bio = {
     "name" : "Igor Dagayev",
     "role" : "Director",
@@ -34,7 +30,7 @@ var education = {
       "degree":"Master",
       "majors":["Microelectronics"],
       "dates":"1983 - 1984",
-      "url":"http://www.eltech.ru"
+      "url":"http://www.eltech.ru/en/university"
     }
   ],
   "onlineCourses": [
@@ -70,7 +66,20 @@ var work = {
       "dates":"2005 - 2006",
       "description":"Mobile development"
     }
-  ]
+  ],
+  display:function()
+  {
+    $("#workExperience").append(HTMLworkStart);
+
+    this.jobs.forEach(function(job){
+      var workingPlacePlusTitle = HTMLworkEmployer.replace("%data%", job.employer) +
+        HTMLworkTitle.replace("%data%",  job.title);
+      $(".work-entry:last").append(workingPlacePlusTitle);
+      $(".work-entry:last").append(HTMLworkDates.replace("%data%",  job.dates));
+      $(".work-entry:last").append(HTMLworkLocation.replace("%data%",  job.location));
+      $(".work-entry:last").append(HTMLworkDescription.replace("%data%",  job.description));
+    });
+  }
 };
 
 // let's reuse the same images, but dfifferent sequeince
@@ -91,19 +100,20 @@ var projects = {
   ]
 };
 
+//__________________________________________________
+
 projects.display = function()
 {
-  for(var project in projects.projects)
-  {
-    $("#projects").append(HTMLprojectStart);
-    $(".project-entry:last").append(HTMLprojectTitle.replace("%data%", projects.projects[project].title));
-    $(".project-entry:last").append(HTMLprojectDates.replace("%data%", projects.projects[project].dates));
-    $(".project-entry:last").append(HTMLprojectDescription.replace("%data%",  projects.projects[project].description));
+  $("#projects").append(HTMLprojectStart);
+  projects.projects.forEach(function(project){
+    $(".project-entry:last").append(HTMLprojectTitle.replace("%data%", project.title));
+    $(".project-entry:last").append(HTMLprojectDates.replace("%data%", project.dates));
+    $(".project-entry:last").append(HTMLprojectDescription.replace("%data%", project.description));
 
-    for(var image in projects.projects[project].images) {
-      $(".project-entry:last").append(HTMLprojectImage.replace("%data%",  projects.projects[project].images[image]));
-    }
-  }
+    project.images.forEach(function(image){
+      $(".project-entry:last").append(HTMLprojectImage.replace("%data%",  image));
+    });
+  });
 };
 
 //__________________________________________________
@@ -133,22 +143,6 @@ bio.display = function()
 
 //__________________________________________________
 
-work.display = function()
-{
-  $("#workExperience").append(HTMLworkStart);
-
-  work.jobs.forEach(function(job){
-    var workingPlacePlusTitle = HTMLworkEmployer.replace("%data%", job.employer) +
-      HTMLworkTitle.replace("%data%",  job.title);
-    $(".work-entry:last").append(workingPlacePlusTitle);
-    $(".work-entry:last").append(HTMLworkDates.replace("%data%",  job.dates));
-    $(".work-entry:last").append(HTMLworkLocation.replace("%data%",  job.location));
-    $(".work-entry:last").append(HTMLworkDescription.replace("%data%",  job.description));
-  });
-};
-
-//__________________________________________________
-
 education.display = function()
 {
   $("#education").append(HTMLschoolStart);
@@ -156,7 +150,7 @@ education.display = function()
   education.schools.forEach(function(school){
     var namePlusDgree = HTMLschoolName.replace("%data%", school.name) +
       HTMLschoolDegree.replace("%data%", school.degree);
-    $(".education-entry:last").append(namePlusDgree);
+    $(".education-entry:last").append(namePlusDgree.replace("#", school.url));
     $(".education-entry:last").append(HTMLschoolDates.replace("%data%", school.dates));
     $(".education-entry:last").append(HTMLschoolLocation.replace("%data%", school.location));
     $(".education-entry:last").append(HTMLschoolMajor.replace("%data%", school.majors));
@@ -166,7 +160,7 @@ education.display = function()
   education.onlineCourses.forEach(function(online){
     var titlePlusSchool = HTMLonlineTitle.replace("%data%", online.title) +
       HTMLonlineSchool.replace("%data%", online.school);
-    $(".education-entry:last").append(titlePlusSchool);
+    $(".education-entry:last").append(titlePlusSchool.replace("#", online.url));
     $(".education-entry:last").append(HTMLonlineDates.replace("%data%", online.dates));
     $(".education-entry:last").append(HTMLonlineURL.replace("%data%", online.url));
   });
